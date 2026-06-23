@@ -1,0 +1,40 @@
+﻿@model CourseSystemMVC.Models.Enrollment
+
+@{
+    ViewBag.Title = "Enrollment Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Enrollment details</h2>
+
+<hr />
+
+<dl class="dl-horizontal">
+
+    <dt>Student name</dt>
+    <dd>
+        @Model.User.FirstName @Model.User.LastName
+    </dd>
+
+    <dt>Course name</dt>
+    <dd>@Model.Cours.Title</dd>
+
+    <dt>Course description</dt>
+    <dd>@Model.Cours.Description</dd>
+
+    <dt>Instructor</dt>
+    <dd>
+        @Model.Cours.Instructor.FirstName @Model.Cours.Instructor.LastName
+    </dd>
+
+    <dt>Enrollment Date</dt>
+    <dd>@Model.EnrollmentDate</dd>
+
+    <dt>Status</dt>
+    <dd>@Model.Status</dd>
+
+</dl>
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

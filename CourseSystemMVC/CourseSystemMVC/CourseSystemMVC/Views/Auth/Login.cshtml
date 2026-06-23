@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Login</h2>
+
+@model CourseSystemMVC.Models.LoginViewModel
+
+@using (Html.BeginForm("Login", "Auth", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+    </div>
+
+    <br />
+
+    <div class="form-group">
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+    </div>
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Login</button>
+}

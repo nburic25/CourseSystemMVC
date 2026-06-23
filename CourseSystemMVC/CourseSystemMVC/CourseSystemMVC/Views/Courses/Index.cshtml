@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Cours>
+
+@{
+    ViewBag.Title = "Courses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Courses</h2>
+
+<p>
+    @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+    {
+        @Html.ActionLink("Create new course", "Create")
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Course name
+        </th>
+        <th>
+            @*@Html.DisplayNameFor(model => model.Description)*@
+        </th>
+        <th>
+            Category
+        </th>
+        <th>
+            Instructor
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @*@Html.DisplayFor(modelItem => item.Description)*@
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Category.Name)
+        </td>
+        <td>
+            @item.Instructor.FirstName @item.Instructor.LastName
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = item.CourseID })
+                <text> | </text>
+                @Html.ActionLink("Delete", "Delete", new { id = item.CourseID })
+                <text> | </text>
+            }
+
+            <div style="display:flex; gap:10px; align-items:center;">
+
+            @Html.ActionLink("More info", "Details", new { id = item.CourseID })
+            |
+            @if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
+            {
+                var enrolled = ViewBag.EnrolledCourses as List<int>;
+                bool isEnrolled = enrolled != null && enrolled.Contains(item.CourseID);
+
+                if (isEnrolled)
+                {
+                    <span class="label label-success">Already Enrolled</span>
+                }
+                else
+                {
+                    <form method="get" action="/Courses/Details" style="margin:0;">
+                        <input type="hidden" name="id" value="@item.CourseID" />
+                        <button class="btn btn-primary btn-sm">
+                            Enroll Now
+                        </button>
+                    </form>
+                }
+            }
+            </div>
+
+        </td>
+
+    </tr>
+}
+
+</table>

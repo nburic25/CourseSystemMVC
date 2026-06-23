@@ -1,0 +1,72 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Enrollment>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+{
+    <h2>All Enrollments</h2>
+}
+else
+{
+    <h2>My Enrollments</h2>
+}
+
+@if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+{
+    @Html.ActionLink("Create new enrollment", "Create")
+}
+
+<table class="table">
+    <tr>
+        <th>Enrollment date</th>
+
+        @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+        {
+            <th>Student name</th>
+        }
+        <th>Course name</th>
+
+
+        <th>Status</th>
+        <th></th> <!-- za dugme -->
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentDate)
+            </td>
+
+            @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+            {
+                <td>
+                    @item.User.FirstName @item.User.LastName
+                </td>
+            }
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Cours.Title)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+
+            <td>
+                @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.EnrollmentID })
+                    @: |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.EnrollmentID })
+                    @: |
+                }
+
+                @Html.ActionLink("More info", "Details", new { id = item.EnrollmentID })
+            </td>
+        </tr>
+    }
+</table>

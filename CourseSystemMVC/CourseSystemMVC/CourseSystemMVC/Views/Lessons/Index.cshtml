@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Lesson>
+
+@{
+    ViewBag.Title = "Lessons";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lessons</h2>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+    <tr>
+        <th>
+            Order number
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Content)
+        </th>
+        <th>
+            Course name
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Content)
+        </td>
+        <td>
+            @item.Cours.Title
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.LessonID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.LessonID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.LessonID })
+        </td>
+    </tr>
+}
+
+</table>
