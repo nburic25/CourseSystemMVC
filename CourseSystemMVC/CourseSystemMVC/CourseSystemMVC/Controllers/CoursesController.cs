@@ -71,6 +71,7 @@ namespace CourseSystemMVC.Controllers
                 .Include("Instructor")
                 .Include("Lessons")
                 .Include("Lessons.Materials")
+                .Include("Exams")
                 .Include("Reviews")
                 .FirstOrDefault(c => c.CourseID == id);
 

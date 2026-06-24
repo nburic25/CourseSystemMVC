@@ -72,9 +72,17 @@
 
 @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
 {
-    <a href="/Lessons/Create?courseId=@Model.CourseID" class="btn btn-warning">
-        Add Lesson
-    </a>
+    <div style="display:flex; gap:10px; margin-top:10px;">
+
+        <a href="/Lessons/Create?courseId=@Model.CourseID" class="btn btn-warning">
+            Add Lesson
+        </a>
+
+        <a href="/Exams/Create?courseId=@Model.CourseID" class="btn btn-info">
+            Add Exam
+        </a>
+
+    </div>
 }
 
 @section Scripts {
