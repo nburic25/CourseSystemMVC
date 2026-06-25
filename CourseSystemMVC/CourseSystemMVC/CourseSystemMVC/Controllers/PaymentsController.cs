@@ -52,15 +52,15 @@ namespace CourseSystemMVC.Controllers
             db.Payments.Add(payment);
 
             // ✔ napravi enrollment automatski
-            Enrollment enrollment = new Enrollment
-            {
-                UserID = userId,
-                CourseID = CourseID,
-                EnrollmentDate = DateTime.Now,
-                Status = "Active"
-            };
+            //Enrollment enrollment = new Enrollment
+            //{
+            //    UserID = userId,
+            //    CourseID = CourseID,
+            //    EnrollmentDate = DateTime.Now,
+            //    Status = "Active"
+            //};
 
-            db.Enrollments.Add(enrollment);
+            //db.Enrollments.Add(enrollment);
 
             db.SaveChanges();
 

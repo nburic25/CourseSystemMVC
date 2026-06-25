@@ -1,5 +1,11 @@
 ﻿@model CourseSystemMVC.Models.Cours
 
+@*@if (ViewBag.CompletedCourses != null &&
+        ((List<int>)ViewBag.CompletedCourses).Contains(Model.CourseID))
+    {
+        <span style="color:green;">✔ You completed this course</span>
+    }*@
+
 @if (TempData["Error"] != null)
 {
     <div class="alert alert-danger">
@@ -143,161 +149,221 @@
                 <p>No lessons available.</p>
             </div>
         }
-        </div>
-
     </div>
 
-    <h3>Exams</h3>
+</div>
 
-    @if (Model.Exams != null && Model.Exams.Any())
+<h3>Exams</h3>
+
+@if (Model.Exams != null && Model.Exams.Any())
+{
+    if (
+        (Session["RoleID"] != null && (int)Session["RoleID"] == 1) ||
+        (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
+    )
     {
-        if (
-            (Session["RoleID"] != null && (int)Session["RoleID"] == 1) ||
-            (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
-        )
+        foreach (var exam in Model.Exams)
         {
-            foreach (var exam in Model.Exams)
-            {
-                <div style="border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:10px;">
-                    <strong>@exam.Title</strong>
-                </div>
-            }
-        }
-        else
-        {
-            <div style="border-bottom:1px solid #ddd; margin-bottom:10px;">
-                <p>Please enroll to view exams.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:10px;">
+
+                <strong>@exam.Title</strong>
+
+                @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+                {
+                    <a href="/Results/Create?examId=@exam.ExamID" class="btn btn-sm btn-success">
+                        Add Result
+                    </a>
+                }
+
             </div>
         }
     }
     else
     {
         <div style="border-bottom:1px solid #ddd; margin-bottom:10px;">
-            <p>No exams available.</p>
+            <p>Please enroll to view exams.</p>
         </div>
     }
+}
+else
+{
+    <div style="border-bottom:1px solid #ddd; margin-bottom:10px;">
+        <p>No exams available.</p>
+    </div>
+}
 
-    <h3>Reviews</h3>
-
-    @if (Model.Reviews != null && Model.Reviews.Any())
+@*@if (ViewBag.AverageScore != null)
     {
-        foreach (var r in Model.Reviews)
-        {
-            <strong>
-                @r.User.FirstName @r.User.LastName
-            </strong>
-            <br />
+        <div style="color:#007bff; font-weight:bold;">
+            📊 Your Average Score: @Math.Round((double)ViewBag.AverageScore, 2)
+        </div>
+    }*@
 
-            <div style="border-bottom:1px solid #ddd; margin-bottom:10px;">
-                <strong>Rating: @r.Rating / 5</strong>
-                <p>@r.Comment</p>
+<h3>Your Results</h3>
 
-                @*@if (r.UserID == (int)Session["UserID"])
-                    {
-                        using (Html.BeginForm("Delete", "Reviews", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            @Html.Hidden("id", r.ReviewID)
+@if (ViewBag.UserResults != null)
+{
+    var results = (List<CourseSystemMVC.Models.Result>)ViewBag.UserResults;
 
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        }
-                    }*@
-            </div>
-        }
-    }
-    else
+    bool hasResults = false;
+
+    foreach (var r in results)
     {
-        <p>No reviews yet.</p>
-    }
-
-    @if (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
-    {
-        <h4>Add Review</h4>
-
-        using (Html.BeginForm("Create", "Reviews", FormMethod.Post))
+        if (r.Exam != null && r.Exam.CourseID == Model.CourseID)
         {
-            @Html.AntiForgeryToken()
-            @Html.Hidden("CourseID", Model.CourseID)
+            hasResults = true;
 
-            <label><strong>Rating (1-5)</strong></label>
-            <input type="number" name="Rating" min="1" max="5" class="form-control" />
-            <br />
+            <div style="border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:10px;">
 
-            <label><strong>Comment</strong></label>
-            <textarea name="Comment" class="form-control"></textarea>
-            <br />
+                <strong>@r.Exam.Title</strong>
+                <br />
 
-            <button type="submit" class="btn btn-primary">Submit Review</button>
-        }
-    }
+                Score: @r.Score
 
-    <p>
-        @Html.ActionLink("Back to List", "Index")
-
-    </p>
-
-    <p style="color:gray; margin-bottom:10px;">
-        To enroll in this course, please complete the payment below.
-    </p>
-
-    <div style="display:flex; align-items:center; gap:20px; margin-bottom:10px;">
-
-        @if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
-        {
-            <div style="display:flex; align-items:center; gap:10px;">
-
-                @if (Session["UserID"] != null)
+                @if (r.Score >= 50)
                 {
-                    if (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
-                    {
-                        <span class="label label-success">Already Enrolled</span>
-                    }
-                    else
-                    {
-                        <form method="post" action="/Payments/Create">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="CourseID" value="@Model.CourseID" />
-                            <button type="submit" class="btn btn-success btn-sm">
-                                Pay Now
-                            </button>
-                        </form>
-                    }
+                    <span style="color:green; margin-left:10px;">Passed</span>
                 }
                 else
                 {
-                    <span>Please login to enroll.</span>
+                    <span style="color:red; margin-left:10px;">Failed</span>
                 }
 
             </div>
         }
+    }
 
-        @if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
-        {
-            <a href="/Enrollments/Index" class="btn btn-info btn-sm">
-                Go To My Enrollments
-            </a>
-        }
-
-    </div>
-
-    @*<div style="margin-bottom:10px;">
-            <a href="/Enrollments/Index" class="btn btn-info btn-sm">
-                My Enrollments
-            </a>
-        </div>*@
-
-    @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+    if (!hasResults)
     {
-        <a href="/Lessons/Create?courseId=@Model.CourseID" class="btn btn-warning">
-            Add Lesson
+        <p>No results available for this course.</p>
+    }
+}
+else
+{
+    <p>No results available.</p>
+}
+
+<h3>Reviews</h3>
+
+@if (Model.Reviews != null && Model.Reviews.Any())
+{
+    foreach (var r in Model.Reviews)
+    {
+        <strong>
+            @r.User.FirstName @r.User.LastName
+        </strong>
+        <br />
+
+        <div style="border-bottom:1px solid #ddd; margin-bottom:10px;">
+            <strong>Rating: @r.Rating / 5</strong>
+            <p>@r.Comment</p>
+
+            @*@if (r.UserID == (int)Session["UserID"])
+                {
+                    using (Html.BeginForm("Delete", "Reviews", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("id", r.ReviewID)
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Delete
+                        </button>
+                    }
+                }*@
+        </div>
+    }
+}
+else
+{
+    <p>No reviews yet.</p>
+}
+
+@if (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
+{
+    <h4>Add Review</h4>
+
+    using (Html.BeginForm("Create", "Reviews", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("CourseID", Model.CourseID)
+
+        <label><strong>Rating (1-5)</strong></label>
+        <input type="number" name="Rating" min="1" max="5" class="form-control" />
+        <br />
+
+        <label><strong>Comment</strong></label>
+        <textarea name="Comment" class="form-control"></textarea>
+        <br />
+
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    }
+}
+
+<p>
+    @Html.ActionLink("Back to List", "Index")
+
+</p>
+
+<p style="color:gray; margin-bottom:10px;">
+    To enroll in this course, please complete the payment below.
+</p>
+
+<div style="display:flex; align-items:center; gap:20px; margin-bottom:10px;">
+
+    @if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
+    {
+        <div style="display:flex; align-items:center; gap:10px;">
+
+            @if (Session["UserID"] != null)
+            {
+                if (ViewBag.IsEnrolled != null && (bool)ViewBag.IsEnrolled)
+                {
+                    <span class="label label-success">Already Enrolled</span>
+                }
+                else
+                {
+                    <form method="post" action="/Payments/Create">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="CourseID" value="@Model.CourseID" />
+                        <button type="submit" class="btn btn-success btn-sm">
+                            Pay Now
+                        </button>
+                    </form>
+                }
+            }
+            else
+            {
+                <span>Please login to enroll.</span>
+            }
+
+        </div>
+    }
+
+    @if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
+    {
+        <a href="/Enrollments/Index" class="btn btn-info btn-sm">
+            Go To My Enrollments
         </a>
     }
 
-    @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
-    {
-        <a href="/Exams/Create?courseId=@Model.CourseID" class="btn btn-info">
-            Add Exam
+</div>
+
+@*<div style="margin-bottom:10px;">
+        <a href="/Enrollments/Index" class="btn btn-info btn-sm">
+            My Enrollments
         </a>
-    }
+    </div>*@
+
+@if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+{
+    <a href="/Lessons/Create?courseId=@Model.CourseID" class="btn btn-warning">
+        Add Lesson
+    </a>
+}
+
+@if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+{
+    <a href="/Exams/Create?courseId=@Model.CourseID" class="btn btn-info">
+        Add Exam
+    </a>
+}

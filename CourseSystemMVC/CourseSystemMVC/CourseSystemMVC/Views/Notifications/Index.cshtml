@@ -1,0 +1,47 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Notification>
+
+@{
+    ViewBag.Title = "Notifications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Notifications</h2>
+
+@if (!Model.Any())
+{
+    <p>No notifications.</p>
+}
+else
+{
+    foreach (var item in Model)
+    {
+        <div style="border-bottom:1px solid #ddd; padding:10px; margin-bottom:10px;">
+
+            <strong>@item.Message</strong>
+
+            <br />
+
+            <small>
+                From: @item.User.FirstName
+            </small>
+
+            <br />
+
+            @if (item.IsRead == false)
+            {
+                <span style="color:red;">(New)</span>
+
+                <br />
+
+                <a href="/Notifications/MarkAsRead/@item.NotificationID">
+                    Mark as read
+                </a>
+            }
+            else
+            {
+                <span style="color:green;">Read</span>
+            }
+
+        </div>
+    }
+}

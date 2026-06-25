@@ -56,15 +56,23 @@ namespace CourseSystemMVC.Controllers
         }
 
         // GET: Login
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
+
         // POST: Login
         [HttpPost]
-        public ActionResult Login(LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             var hashedPassword = HashPassword(model.Password);
 
             var user = db.Users
@@ -73,14 +81,16 @@ namespace CourseSystemMVC.Controllers
             if (user != null)
             {
                 Session["UserID"] = user.UserID;
-                Session["UserName"] = user.FirstName;
                 Session["RoleID"] = user.RoleID;
+
+                if (!string.IsNullOrEmpty(returnUrl))
+                    return Redirect(returnUrl);
 
                 return RedirectToAction("Index", "Courses");
             }
 
-            ViewBag.Error = "Invalid email or password";
-            return View();
+            ViewBag.Error = "Invalid login credentials";
+            return View(model);
         }
 
         public ActionResult Logout()

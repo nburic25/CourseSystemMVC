@@ -18,12 +18,80 @@
             </button>
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    @if (Session["UserID"] == null)
+                    {
+                        <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                    else if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
+                    {
+                        @*<li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>*@
+                        <li>@Html.ActionLink("Courses", "Index", "Courses", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("My Enrollments", "Index", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("My Results", "Index", "Results", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Notifications", "Index", "Notifications", new { area = "" }, new { @class = "nav-link" })</li>
+
+                    }
+                    else if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+                    {
+                        <li>@Html.ActionLink("Courses", "Index", "Courses", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Categories", "Index", "Categories", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Instructors", "Index", "Instructors", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Enrollments", "Index", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Exams", "Index", "Exams", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li>@Html.ActionLink("Lessons", "Index", "Lessons", new { area = "" }, new { @class = "nav-link" })</li>
+                    }
+                    @{
+                        int unread = 0;
+
+                        if (Session["UserID"] != null)
+                        {
+                            var db = new CourseSystemMVC.Models.CourseSystemDBEntities();
+                            int uid = (int)Session["UserID"];
+
+                            unread = db.Notifications
+                                .Count(n => n.UserID == uid && n.IsRead == false);
+                        }
+                    }
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    @if (Session["UserID"] == null)
+                    {
+                        <li>@Html.ActionLink("Register", "Index", "Register")</li>
+                        @*<li class="divider-vertical"></li>*@
+                        <li style="margin-left:10px;"></li>
+                        <li>@Html.ActionLink("Login", "Login", "Auth")</li>
+                    }
+                    else
+                    {
+                        <li><a href="#">Hello, User</a></li>
+                        <li style="margin-left:10px;"></li>
+                        <li>@Html.ActionLink("Logout", "Logout", "Auth")</li>
+                    }
+
                 </ul>
             </div>
         </div>
+
+        @using (Html.BeginForm("QuickSearch", "Search", FormMethod.Get))
+        {
+            <input type="text"
+                   name="query"
+                   placeholder="Search courses..."
+                   class="form-control"
+                   style="width:200px; display:inline-block;" />
+
+            <button type="submit" class="btn btn-primary btn-sm">
+                Search
+            </button>
+        }
+        <a href="/Search/AdvancedSearch" class="btn btn-link">
+            Advanced Search
+        </a>
     </nav>
     <div class="container body-content">
         @RenderBody()

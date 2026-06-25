@@ -62,11 +62,9 @@ namespace CourseSystemMVC.Controllers
         public ActionResult Details(int? id)
         {
             if (id == null)
-            {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
 
-            Cours cours = db.Courses
+            var cours = db.Courses
                 .Include("Category")
                 .Include("Instructor")
                 .Include("Lessons")
@@ -76,16 +74,63 @@ namespace CourseSystemMVC.Controllers
                 .FirstOrDefault(c => c.CourseID == id);
 
             if (cours == null)
-            {
                 return HttpNotFound();
+
+
+            //if (Session["UserID"] == null)
+            //{
+            //    ViewBag.Error = "You must be logged in to view course details.";
+            //    return RedirectToAction("Login", "Account");
+            //}
+
+            int? userId = Session["UserID"] as int?;
+            int? roleId = Session["RoleID"] as int?;
+
+            if (userId == null)
+            {
+                ViewBag.Error = "You must be logged in to continue.";
+                return View(cours); // ili Redirect na login ako želiš
             }
 
-            int userId = (int)Session["UserID"];
-
-            var isEnrolled = db.Enrollments
+            // =========================
+            // ENROLLMENT CHECK
+            // =========================
+            bool isEnrolled = db.Enrollments
                 .Any(e => e.CourseID == id && e.UserID == userId);
 
             ViewBag.IsEnrolled = isEnrolled;
+
+            // =========================
+            // RESULTS (ONLY FOR STUDENT)
+            // =========================
+            if (roleId == 2)
+            {
+                var completed = db.Database.SqlQuery<int>(
+                    "SELECT CourseID FROM Courses c WHERE dbo.fn_IsCourseCompleted(@p0, c.CourseID) = 1",
+                    userId
+                ).ToList();
+
+                ViewBag.CompletedCourses = completed;
+
+                var avgScore = db.Database.SqlQuery<double>(
+                    "SELECT dbo.fn_GetAverageScore(@p0)",
+                    userId
+                ).FirstOrDefault();
+
+                ViewBag.AverageScore = avgScore;
+
+                ViewBag.UserResults = db.Results
+                    .Include(r => r.Exam)
+                    .Where(r => r.UserID == userId)
+                    .ToList();
+            }
+            else
+            {
+                // ADMIN ili drugi role → nema student logike
+                ViewBag.IsCompleted = false;
+                ViewBag.AverageScore = null;
+                ViewBag.UserResults = null;
+            }
 
             return View(cours);
         }

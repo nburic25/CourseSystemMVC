@@ -1,0 +1,89 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Cours>
+
+@{
+    ViewBag.Title = "Advanced Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Advanced Search</h2>
+
+<div class="row">
+
+    <!-- SIDEBAR FILTER -->
+    <div class="col-md-3" style="border-right:1px solid #ddd; padding-right:20px;">
+
+        <h4>Filters</h4>
+
+        @using (Html.BeginForm("AdvancedSearch", "Search", FormMethod.Get))
+        {
+            <!-- Course name -->
+            <div class="form-group">
+                <label>Course name</label>
+                <input type="text" name="title" class="form-control"
+                       value="@Request["title"]" />
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+                <label>Category</label>
+                @Html.DropDownList(
+                    "categoryId",
+                    ViewBag.Categories as SelectList,
+                    "All categories",
+                    new { @class = "form-control" }
+                )
+    </div>
+
+            <!-- Price range -->
+            <div class="form-group">
+                <label>Price From</label>
+                <input type="number" name="priceFrom" class="form-control"
+                       value="@Request["priceFrom"]" />
+            </div>
+
+            <div class="form-group">
+                <label>Price To</label>
+                <input type="number" name="priceTo" class="form-control"
+                       value="@Request["priceTo"]" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Search
+            </button>
+
+            <a href="/Search/AdvancedSearch" class="btn btn-default btn-block">
+                Reset
+            </a>
+        }
+    </div>
+
+    <!-- RESULTS -->
+    <div class="col-md-9">
+
+        <h4>Results</h4>
+
+        @if (!Model.Any())
+        {
+            <p>No courses found.</p>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div style="border-bottom:1px solid #ddd; padding:10px 0;">
+                    <h4>@item.Title</h4>
+                    <p>@item.Description</p>
+
+                    <p>
+                        <strong>Price:</strong> @item.Price
+                    </p>
+
+                    <a href="/Courses/Details/@item.CourseID" class="btn btn-sm btn-info">
+                        View
+                    </a>
+                </div>
+            }
+        }
+
+    </div>
+</div>

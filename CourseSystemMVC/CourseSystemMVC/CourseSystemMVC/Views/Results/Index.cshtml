@@ -1,0 +1,94 @@
+﻿@model IEnumerable<CourseSystemMVC.Models.Result>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (Session["RoleID"] != null && (int)Session["RoleID"] == 2)
+{
+    <h2>My Results</h2>
+}
+else if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+{
+    <h2>Results</h2>
+}
+
+@if (ViewBag.AverageScore != null)
+{
+    <div style="margin-bottom:15px; font-size:16px; font-weight:bold;">
+        📊 Your Average Score: @Math.Round((double)ViewBag.AverageScore, 2)
+    </div>
+}
+
+@*@if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+    {
+        <p>
+            @Html.ActionLink("Add Result", "Create", null, new { @class = "btn btn-success btn-sm" })
+        </p>
+    }*@
+
+@*<h2>Results</h2>*@
+
+@*<p>
+        @Html.ActionLink("Add result", "Create")
+    </p>*@
+<table class="table">
+    <tr>
+        <th>
+            Status
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Score)
+        </th>
+        <th>
+            Exam
+        </th>
+        <th>
+            Student name
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (item.Score >= 50)
+                {
+                    <span style="color:green;">Passed</span>
+                }
+                else
+                {
+                    <span style="color:red;">Failed</span>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Exam.Title)
+            </td>
+            <td>
+                @item.User.FirstName @item.User.LastName
+            </td>
+            <td>
+
+                @if (Session["RoleID"] != null && (int)Session["RoleID"] == 1)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ResultID })
+                    <span> | </span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.ResultID })
+                    <span> | </span>
+                }
+
+                @Html.ActionLink("More info", "Details", new { id = item.ResultID })
+
+                @*@Html.ActionLink("Edit", "Edit", new { id = item.ResultID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ResultID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ResultID })*@
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,58 @@
+﻿@model CourseSystemMVC.Models.Result
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>About this result</h2>
+
+<div>
+    @*<h4>Result</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Exam
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Exam.Title)
+        </dd>
+
+        <dt>
+            Student name
+        </dt>
+
+        <dd>
+            @Model.User.FirstName @Model.User.LastName
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Score)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Score)
+        </dd>
+
+        <dt>
+            Status
+        </dt>
+        <dd>
+            @if (Model.Score >= 50)
+            {
+                <span style="color:green;">Passed</span>
+            }
+            else
+            {
+                <span style="color:red;">Failed</span>
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ResultID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

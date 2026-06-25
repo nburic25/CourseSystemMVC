@@ -1,15 +1,25 @@
-﻿
+﻿@model CourseSystemMVC.Models.LoginViewModel
+
 @{
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 <h2>Login</h2>
 
-@model CourseSystemMVC.Models.LoginViewModel
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
 @using (Html.BeginForm("Login", "Auth", FormMethod.Post))
 {
+    @Html.AntiForgeryToken()
+
     <div class="form-group">
         @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
     </div>
@@ -24,3 +34,22 @@
 
     <button type="submit" class="btn btn-primary">Login</button>
 }
+<p style="margin-top:10px;">
+    Don't have an account?
+    @Html.ActionLink("Sign up", "Index", "Register")
+</p>
+    @*<p style="margin-top:10px;">
+            Don't have an account?
+            @Html.ActionLink("Sign up", "Register", "Auth")
+        </p>*@
+
+    @*<hr />
+        <p class="text-center">
+            Don't have an account?
+            <a href="/Auth/Register">Sign up</a>
+        </p>*@
+
+    @*<div style="margin-top:15px;">
+            <span>Don't have an account?</span>
+            @Html.ActionLink("Create one here", "Register", "Auth", null, new { @class = "btn btn-link" })
+        </div>*@

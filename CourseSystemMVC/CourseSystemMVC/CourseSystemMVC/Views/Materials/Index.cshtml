@@ -12,9 +12,9 @@
 </p>
 <table class="table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FilePath)
-        </th>
+        <!--<th>-->
+            @*@Html.DisplayNameFor(model => model.FilePath)*@
+        <!--</th>-->
         <th>
             @Html.DisplayNameFor(model => model.Lesson.Title)
         </th>
@@ -23,15 +23,15 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.FilePath)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Lesson.Title)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.MaterialID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MaterialID }) |
+            @Html.ActionLink("More info", "Details", new { id=item.MaterialID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.MaterialID })
         </td>
     </tr>

@@ -1,0 +1,43 @@
+﻿@model CourseSystemMVC.Models.Instructor
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>About this instructor</h2>
+
+<div>
+    @*<h4>Instructor</h4>*@
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            First name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            Last name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            Biography
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bio)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.InstructorID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

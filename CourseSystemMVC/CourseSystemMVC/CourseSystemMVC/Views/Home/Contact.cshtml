@@ -1,19 +1,45 @@
 ﻿@{
     ViewBag.Title = "Contact";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <address>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399<br />
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+<div class="jumbotron">
+    <h1>Contact</h1>
+    <p class="lead">
+        If you have any questions about the platform, feel free to reach out.
+        This project is developed as a personal learning system for managing courses, exams and enrollments.
+    </p>
+</div>
 
-    <address>
-        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
-</main>
+<div class="row">
+
+    <div class="col-md-6">
+        <h2>Support</h2>
+        <p>
+            For any issues related to login, courses, or exams, you can contact me directly.
+        </p>
+
+        <p><strong>Email:</strong> nikola9505@gmail.com</p>
+    </div>
+
+    <div class="col-md-6">
+        <h2>About the Project</h2>
+        <p>
+            This is a solo-developed ASP.NET MVC project built for learning purposes.
+            It demonstrates full-stack web development concepts including authentication,
+            course management, exams, and notifications.
+        </p>
+    </div>
+
+</div>
+
+<hr />
+
+<h3>Features Included</h3>
+
+<ul>
+    <li>User authentication (Login/Register)</li>
+    <li>Course enrollment system</li>
+    <li>Exams and scoring</li>
+    <li>Notifications via database triggers</li>
+    <li>Role-based access (Admin / User)</li>
+</ul>
