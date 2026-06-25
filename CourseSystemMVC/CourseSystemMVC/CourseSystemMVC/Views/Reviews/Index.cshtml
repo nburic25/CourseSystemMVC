@@ -5,11 +5,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Reviews</h2>
 
-<p>
+@*<p>
     @Html.ActionLink("Create New", "Create")
-</p>
+</p>*@
 <table class="table">
     <tr>
         <th>
@@ -42,9 +42,18 @@
             @Html.DisplayFor(modelItem => item.User.FirstName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ReviewID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ReviewID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ReviewID })
+            @Html.ActionLink("Edit", "Edit", new { id = item.ReviewID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ReviewID }) |
+            @*@Html.ActionLink("Delete", "Delete", new { id=item.ReviewID })*@
+            @using (Html.BeginForm("Delete", "Reviews", FormMethod.Post, new { style = "display:inline;" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("id", item.ReviewID)
+
+                <button type="submit" class="btn btn-link" style="color:red; padding:0;">
+                    Delete
+                </button>
+            }
         </td>
     </tr>
 }

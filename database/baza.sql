@@ -153,3 +153,24 @@ VALUES
 ('John', 'Doe', 'Senior software engineer'),
 ('Jane', 'Smith', 'UI/UX designer'),
 ('Mark', 'Brown', 'Database specialist');
+
+-- DELETE FROM Reviews
+-- WHERE Rating = 4;
+
+-- DELETE FROM Courses
+-- WHERE CourseID = 2
+
+-- SELECT * FROM Courses
+-- SELECT * FROM Lessons
+-- SELECT * FROM Materials
+-- SELECT * FROM Enrollments
+-- SELECT * FROM Exams
+-- SELECT * FROM Users
+
+-- DELETE FROM Users
+-- WHERE RoleID = 2
+
+-- DELETE FROM Payments
+
+-- SELECT * FROM Notifications;
+-- DELETE FROM Notifications
